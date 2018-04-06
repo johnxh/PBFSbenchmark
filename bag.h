@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #ifndef Bag_H
 #define Bag_H
 
@@ -6,10 +8,10 @@ public:
     int val;
     Node *left, *right;
 
-    Node() : val(0), left(0), right(0) {
+    Node() : val(NULL), left(NULL), right(NULL) {
     }
 
-    Node(int v) : val(v),  left(0), right(0) {
+    Node(int v) : val(v),  left(NULL), right(NULL) {
     }
 
     Node(int v, Node *left, Node *right) :
@@ -27,12 +29,12 @@ public:
     int k;
     Node *root;
     Pennant() {
-        k = 0;
+        k = NULL;
         root = Node();
         root->left = Node();
     }
     Pennant(int a, int b) {
-        k = 0;
+        k = NULL;
         root = Node(a);
         root->left = Node(b);
     }
@@ -48,8 +50,8 @@ public:
     Pennant pennant_split() {
         Node n;
         Pennant y = new Pennant(--k, root->left);
-        root->right = 0;
-        y.root->right = 0;
+        root->right = NULL;
+        y.root->right = NULL;
         return y;
     }
 };
