@@ -26,6 +26,8 @@ public:
     }
 
 	~Node(){
+        delete(left);
+        delete(right);
 	}
 };
 
@@ -35,7 +37,7 @@ public:
     int k;
     Node *root;
     Pennant() {
-        k = 0;
+        k = -1;
         root = new Node();
     }
 
@@ -61,6 +63,10 @@ public:
         k++;
     }
 
+    bool is_empty() {
+        return k == -1;
+    }
+
     Pennant* pennant_split() {
         Node n;
         Pennant* y = new Pennant(--k, root->left);
@@ -70,6 +76,7 @@ public:
     }
 
 	~Pennant(){
+        delete(root);
 	}
 };
 
@@ -87,21 +94,55 @@ public:
     }
 
     void insert(int v) {
-        int k = 0;
+        int i = 0;
         Pennant* x = new Pennant(v);
-        while (S[k] != nullptr) {
-            S[k].pennant_union(x);
-            x = S[k];
-            S[k] = nullptr;
+        while (!S[i].is_empty()) {
+            S[i].pennant_union(x);
+            x = S[i];
+            S[i++].k = -1;
         }
-        S[k] = x;
+        S[i] = x;
     }
 
-    void bag_union(Bag* S) {
-        int y = 0;
-        for (int k = 0; k < r; ++k) {
-            //TODO: (this[k],y) = FA(this[k], S[k], y)
+    void bag_union(Bag* P) {
+        Pennant* y = new Pennant();
+        for (int i = 0; i < r; ++i) {
+            if (S[i].is_empty()) {
+                if (P->S[i].is_empty()) {
+                    if (!y->is_empty()) {
+                        S[i] = y;
+                        y = new Pennant();
+                    }
+                } else { // !P.S[i].is_empty()
+                    if (y->is_empty()) {
+                        S[i] = P->S[i];
+                        P->S[i] = new Pennant();
+                    }
+                }
+            }
+            else { // !this.S[i].is_empty()
+                if (P->S[i].is_empty()) {
+                    if (!y->is_empty()) {
+                        y->pennant_union(&S[i]);
+                        S[i] = new Pennant();
+                    }
+                } else {  // !P.S[i].is_empty()
+                    if (y->is_empty()) {
+                        S[i].pennant_union(&(P->S[i]));
+                        y = S[i];
+                        S[i] = new Pennant();
+                        P->S[i] = new Pennant();
+                    } else {
+                        y->pennant_union(&(P->S[i]));
+                    }
+                } 
+            }
         }
+        delete(P);
+    }
+
+    ~Bag(){
+        delete []S;
     }
 };
 
