@@ -22,6 +22,14 @@ public:
         return bag->is_empty();
     }
 
+    int get_size() {
+        return bag->get_size();
+    }
+
+    int get_depth() {
+        return bag->get_depth();
+    }
+
     Bag* get_value() {
         return bag;
     }

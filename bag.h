@@ -150,6 +150,28 @@ public:
         return true;
     }
 
+    int get_size() {
+        int sum = 0;
+        int mult = 1;
+        for (int i = 0; i < r; ++i) {
+            if (!S[i].is_empty()) {
+                sum += mult;
+            }
+            mult = mult << 1;
+        }
+        return sum;
+    }
+
+    int get_depth() {
+        int ret = -1;
+        for (int i = 0; i < r; ++i) {
+            if (!S[i].is_empty()) {
+                ret = i;
+            }
+        }
+        return ret + 1;
+    }
+
     ~Bag(){
         delete []S;
     }
