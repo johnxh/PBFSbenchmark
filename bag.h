@@ -141,6 +141,15 @@ public:
         delete(P);
     }
 
+    bool is_empty() {
+        for (int i = 0; i < r; ++i) {
+            if (!S[i].is_empty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     ~Bag(){
         delete []S;
     }
