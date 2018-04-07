@@ -18,6 +18,10 @@ public:
         bag->insert(v);
     }
 
+    bool is_empty() {
+        return bag->is_empty();
+    }
+
     Bag* get_value() {
         return bag;
     }
