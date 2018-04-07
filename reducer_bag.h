@@ -9,8 +9,7 @@ class BagView {
 public:
     Bag* bag;
     typedef Bag* value_type;
-    BagView*() : bag() {}
-    BagView*() : 
+    BagView() : bag() {}
     void reduce(BagView* bv) {
         bag->bag_union(bv);
     }
