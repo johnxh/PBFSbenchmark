@@ -85,11 +85,11 @@ public:
     int r;
     Pennant* S;   //backbone
 
-    Bag() : r(S_DEFAULT), S(S_DEFAULT) {
+    Bag() : r(S_DEFAULT) {
+        S = new Pennant[S_DEFAULT];
     }
 
-    Bag(int s) {
-        r = s;
+    Bag(int s) : r(s) {
         S = new Pennant[r];
     }
 
