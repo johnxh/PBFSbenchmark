@@ -3,15 +3,18 @@
 #ifndef Bag_H
 #define Bag_H
 
+# define S_DEFAULT 10
+
 class Node {
 public:
     int val;
-    Node *left, *right;
+    Node *left; 
+	Node *right;
 
-    Node() : val(NULL), left(NULL), right(NULL) {
+    Node() : val(0), left(nullptr), right(nullptr) {
     }
 
-    Node(int v) : val(v),  left(NULL), right(NULL) {
+    Node(int v) : val(v),  left(nullptr), right(nullptr) {
     }
 
     Node(int v, Node *left, Node *right) :
@@ -21,6 +24,9 @@ public:
     void set(int v) {
         val = v;
     }
+
+	~Node(){
+	}
 };
 
 class Pennant
@@ -30,61 +36,63 @@ public:
     Node *root;
     Pennant() {
         k = 0;
-        root = Node();
+        root = new Node();
     }
 
     Pennant(int a) {
         k = 0;
-        root = Node(a);
+        root = new Node(a);
     }
 
     Pennant(int a, int b) {
         k = 1;
-        root = Node(a);
-        root->left = Node(b);
+        root = new Node(a);
+        root->left = new Node(b);
     }
 
-    Pennant(int d, Node n) {
+    Pennant(int d, Node* n) {
         k = d;
         root = n;
     }
 
     void pennant_union(Pennant* y) {
-        (y->root)->right = this->root->left;
+        y->root->right = this->root->left;
         this->root->left = y->root;
         k++;
     }
 
-    Pennant pennant_split() {
+    Pennant* pennant_split() {
         Node n;
-        Pennant y = new Pennant(--k, root->left);
-        root->right = NULL;
-        y.root->right = NULL;
+        Pennant* y = new Pennant(--k, root->left);
+        root->right = nullptr;
+        y.root->right = nullptr;
         return y;
     }
+
+	~Pennant(){
+	}
 };
 
-#define S_DEFAULT 10
 class Bag {
 public:
     int r;
-    Pennant* S[];   //backbone
+    Pennant* S;   //backbone
 
     Bag() : r(S_DEFAULT), S(S_DEFAULT) {
     }
 
     Bag(int s) {
         r = s;
-        S(s);
+        S = new Pennant[r];
     }
 
     void insert(int v) {
         int k = 0;
         Pennant* x = new Pennant(v);
-        while (S[k] != NULL) {
+        while (S[k] != nullptr) { // TODO, when creating array, C++ will use the default ctor, so here should not be nullptr
             S[k]->pennant_union(x);
             x = S[k];
-            S[k] = NULL;
+            S[k] = nullptr;
         }
         S[k] = x;
     }
@@ -96,3 +104,5 @@ public:
         }
     }
 };
+
+#endif
