@@ -10,8 +10,9 @@ using namespace std;
 
 #define V0 0
 int * dist;
+vector<vector<int> > list;
 
-vector<int> get_neighbour(int v, vector<vector<int>> list);
+vector<int> get_neighbour(int v, vector<vector<int> > list);
 void process_layer(BagView* bag, BagView* next, int d);
 void process_pennant(Pennant* p, BagView* bag, int d);
 
@@ -24,7 +25,10 @@ int main(){
     }
     
     int d = 0; //level number
-    
+    	
+	// initialize list
+
+
     BagView* bag = new BagView();
     bag->insert(V0);
     
@@ -36,7 +40,7 @@ int main(){
     return 0;
 }
 
-void get_neighbour(int v, vector<vector<int>> list){
+vector<int> get_neighbour(int v){
     return list.at(v);    
 }
 

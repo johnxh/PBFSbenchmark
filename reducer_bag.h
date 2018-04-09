@@ -11,7 +11,7 @@ public:
     typedef Bag* value_type;
     BagView() : bag() {}
     void reduce(BagView* bv) {
-        bag->bag_union(bv);
+        bag->bag_union(bv->get_value());
     }
 
     void insert(int v) {

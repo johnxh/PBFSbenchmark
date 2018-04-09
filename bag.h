@@ -11,10 +11,10 @@ public:
     Node *left; 
     Node *right;
 
-    Node() : val(0), left(nullptr), right(nullptr) {
+    Node() : val(0), left(NULL), right(NULL) {
     }
 
-    Node(int v) : val(v),  left(nullptr), right(nullptr) {
+    Node(int v) : val(v),  left(NULL), right(NULL) {
     }
 
     Node(int v, Node *left, Node *right) :
@@ -70,8 +70,8 @@ public:
     Pennant* pennant_split() {
         Node n;
         Pennant* y = new Pennant(--k, root->left);
-        root->right = nullptr;
-        y->root->right = nullptr;
+        root->right = NULL;
+        y->root->right = NULL;
         return y;
     }
 
@@ -98,10 +98,10 @@ public:
         Pennant* x = new Pennant(v);
         while (!S[i].is_empty()) {
             S[i].pennant_union(x);
-            x = S[i];
+            x = &(S[i]);
             S[i++].k = -1;
         }
-        S[i] = x;
+        S[i] = *x;
     }
 
     void bag_union(Bag* P) {
@@ -110,13 +110,14 @@ public:
             if (S[i].is_empty()) {
                 if (P->S[i].is_empty()) {
                     if (!y->is_empty()) {
-                        S[i] = y;
+                        S[i] = *y;
                         y = new Pennant();
                     }
                 } else { // !P.S[i].is_empty()
                     if (y->is_empty()) {
                         S[i] = P->S[i];
-                        P->S[i] = new Pennant();
+						Pennant* new_pennant = new Pennant();
+                        P->S[i] = *new_pennant;
                     }
                 }
             }
@@ -124,14 +125,17 @@ public:
                 if (P->S[i].is_empty()) {
                     if (!y->is_empty()) {
                         y->pennant_union(&S[i]);
-                        S[i] = new Pennant();
+						Pennant* new_pennant = new Pennant();
+                        S[i] = *new_pennant;
                     }
                 } else {  // !P.S[i].is_empty()
                     if (y->is_empty()) {
                         S[i].pennant_union(&(P->S[i]));
-                        y = S[i];
-                        S[i] = new Pennant();
-                        P->S[i] = new Pennant();
+                        y = &(S[i]);
+						Pennant* new_pennant = new Pennant();
+						Pennant* another_new_pennant = new Pennant();
+                        S[i] = *new_pennant;
+                        P->S[i] = *another_new_pennant;
                     } else {
                         y->pennant_union(&(P->S[i]));
                     }
