@@ -5,7 +5,7 @@ CILK_LIBS=/project/linuxlab/gcc/6.4/lib64
 CFLAGS = -ggdb -O3 -fcilkplus
 CXXFLAGS = -ggdb -O3 -fcilkplus
 LIBS = -L$(CILK_LIBS) -Wl,-rpath -Wl,$(CILK_LIBS) -lcilkrts -lpthread -lrt -lm
-PROGS = pbag pbfs_sol
+PROGS = pbfs
 
 INST_RTS_LIBS=/project/cec/class/cse539/inst-cilkplus-rts/lib
 INST_LIBS = -L$(INST_RTS_LIBS) -Wl,-rpath -Wl,$(INST_RTS_LIBS) -lcilkrts -lpthread -lrt -lm -ldl
