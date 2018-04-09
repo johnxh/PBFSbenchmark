@@ -9,7 +9,7 @@ class Node {
 public:
     int val;
     Node *left; 
-	Node *right;
+    Node *right;
 
     Node() : val(0), left(nullptr), right(nullptr) {
     }
@@ -25,10 +25,10 @@ public:
         val = v;
     }
 
-	~Node(){
+    ~Node(){
         delete(left);
         delete(right);
-	}
+    }
 };
 
 class Pennant
@@ -75,9 +75,9 @@ public:
         return y;
     }
 
-	~Pennant(){
+    ~Pennant(){
         delete(root);
-	}
+    }
 };
 
 class Bag {
