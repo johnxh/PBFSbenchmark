@@ -18,7 +18,7 @@ all:: $(PROGS)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
-pbfs: pbfs.o
+pbfs: ktiming.o pbfs.o
 	$(CXX) -o $@ $^ $(INST_LIBS)
 
 
