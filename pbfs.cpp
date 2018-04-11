@@ -14,7 +14,7 @@ using namespace std;
 
 int v0, v, e;
 int * dist;
-vector<vector<int>> list;
+vector<vector<int> > list;
 
 void init();
 void bfs();
@@ -28,7 +28,7 @@ void init() {
     fin >> v >> e;
     dist = new int [v];
     v0 = 0;
-    dist[V0] = 0;
+    dist[v0] = 0;
     for (int i = 1; i < v; ++i) {
         dist[i] = 0x7fffffff;
     }
@@ -51,7 +51,7 @@ void bfs() {
 
 
     BagView* bag = new BagView();
-    bag->insert(V0);
+    bag->insert(v0);
     
     while (!bag->is_empty()) {
         BagView* next_bag = new BagView();
