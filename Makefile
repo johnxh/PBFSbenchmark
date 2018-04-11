@@ -18,6 +18,10 @@ all:: $(PROGS)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
+pbfs: pbfs.o
+	$(CXX) -o $@ $^ $(INST_LIBS)
+
+
 
 clean::
 	-rm -f $(PROGS) *.o
