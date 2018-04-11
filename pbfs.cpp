@@ -52,7 +52,8 @@ void bfs() {
     bag->insert(V0);
     
     while (!bag->is_empty()) {
-        BagView* nextBag = new BagView();  
+        BagView* next_bag = new BagView();
+		process_layer(bag, next_bag,d++);  
     }
 }
 
