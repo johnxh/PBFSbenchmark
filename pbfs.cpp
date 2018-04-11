@@ -33,13 +33,15 @@ void init() {
         dist[i] = 0x7fffffff;
     }
     int v1, v2;
-    for (int i = 1; i < e; ++i) {
+    for (int i = 0; i < e; ++i) {
         fin >> v1 >> v2;
         if (v1 != v2) {
             list[v1].push_back(v2);
             list[v2].push_back(v1);
         }
-    }
+    
+	}
+	fin.close();
 }
 
 void bfs() {
