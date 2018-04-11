@@ -23,9 +23,10 @@ void process_layer(BagView* bag, BagView* next, int d);
 void process_pennant(Pennant* p, BagView* bag, int d);
 
 void init() {
-    ifstream fin; 
+    ifstream fin;
+	char* c; 
     fin.open("matrix.in"); 
-    fin >> v >> e;
+    fin >> v >> e >> c;
     dist = new int [v];
     v0 = 0;
     dist[v0] = 0;
@@ -34,7 +35,7 @@ void init() {
     }
     int v1, v2;
     for (int i = 0; i < e; ++i) {
-        fin >> v1 >> v2;
+        fin >> v1 >> v2 >> c;
         if (v1 != v2) {
             list[v1].push_back(v2);
             list[v2].push_back(v1);
