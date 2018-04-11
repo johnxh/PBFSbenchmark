@@ -6,7 +6,7 @@
 #include <cmath>
 #include <queue>
 #include <vector>
-
+#include <string>
 
 #include "ktiming.h"
 #include"reducer_bag.h"
@@ -14,7 +14,7 @@ using namespace std;
 
 int v0, v, e;
 int * dist;
-vector<vector<int> > list;
+vector<vector<int> > list(1000, vector<int>(10));
 
 void init();
 void bfs();
@@ -23,8 +23,8 @@ void process_layer(BagView* bag, BagView* next, int d);
 void process_pennant(Pennant* p, BagView* bag, int d);
 
 void init() {
-    ifstream fin;
-	char* c; 
+	ifstream fin;
+	string c; 
     fin.open("matrix.in"); 
     fin >> v >> e >> c;
     dist = new int [v];
