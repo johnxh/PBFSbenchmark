@@ -70,6 +70,7 @@ public:
     Pennant* pennant_split() {
         Node n;
         Pennant* y = new Pennant(--k, root->left);
+        root->left = y->root->right;
         root->right = NULL;
         y->root->right = NULL;
         return y;
