@@ -24,8 +24,8 @@ void process_layer(BagView* bag, BagView* next, int d);
 void process_pennant(Pennant* p, BagView* bag, int d);
 
 void init() {
-	ifstream fin;
-	string c; 
+    ifstream fin;
+    string c; 
     fin.open("btree.in"); 
     fin >> v >> e >> c;
     dist = new int [v+1];
@@ -42,30 +42,30 @@ void init() {
             list[v2].push_back(v1);
         }
     
-	}
-	fin.close();
+    }
+    fin.close();
 }
 
 void naive_bfs(){
-	std::queue<int> q;
-	q.push(1);
-	int d = 0;
-	while(q.size()){
-		d++;
-		int size = q.size();
-		for(int j = 0; j < size; j++){
-			int i = q.front();
-			q.pop();
-			vector<int> adj = list[i];
-			for(int k = 0; k < adj.size(); k++){
-				int v = adj.at(k);
-				if(dist[v] == 0x7fffffff){
-					dist[v] = d;
-					q.push(v);
-				}
-			}
-		}
-	}
+    std::queue<int> q;
+    q.push(1);
+    int d = 0;
+    while(q.size()){
+        d++;
+        int size = q.size();
+        for(int j = 0; j < size; j++){
+            int i = q.front();
+            q.pop();
+            vector<int> adj = list[i];
+            for(int k = 0; k < adj.size(); k++){
+                int v = adj.at(k);
+                if(dist[v] == 0x7fffffff){
+                    dist[v] = d;
+                    q.push(v);
+                }
+            }
+        }
+    }
 }
 
 void bfs() {
@@ -76,9 +76,9 @@ void bfs() {
     bag->insert(v0);
     while (!bag->is_empty()) {
         BagView* next_bag = new BagView();
-		process_layer(bag, next_bag,d++);  
-    	bag = next_bag;
-	}
+        process_layer(bag, next_bag,d++);  
+        bag = next_bag;
+    }
 }
 
 int main(){
@@ -90,10 +90,10 @@ int main(){
 
     printf("Elapsed time in seconds: %f\n", ktiming_diff_sec(&begin_rm, &end_rm));
     for(int i = 1; i <= v; i++){
-		cout << dist[i] << " "; 
-	}
-	
-	return 0;
+        cout << dist[i] << " "; 
+    }
+    
+    return 0;
 }
 
 
@@ -107,9 +107,9 @@ void process_layer(BagView* bag, BagView* next, int d){
 
 void process_pennant(Pennant* p, BagView* bag, int d){
     cout << "d: " << d << "\n"; 
-	if (p->k < 7){ // the penant is small enough to process in one run
+    if (p->k < 7){ // the penant is small enough to process in one run
         cout << "process penant with k = " << p->k << "\n";
-		std::queue<Node*> q;
+        std::queue<Node*> q;
         q.push(p->root);
         while (q.size()){
             Node* front = q.front();
@@ -120,18 +120,18 @@ void process_pennant(Pennant* p, BagView* bag, int d){
                 int v = adj.at(i);
                 if (dist[v] == 0x7fffffff) {
                     dist[v] = d+1;
-					cout << "Inserting " << v << "\n";
-					bag->insert(v);
-					cout << bag->get_size();
+                    cout << "Inserting " << v << "\n";
+                    bag->insert(v);
+                    cout << bag->get_size();
                 }
             }
             if (front->left) q.push(front->left);
             if (front->right) q.push(front->right);
         }
-		cout <<"size of next level is" << bag->get_size() << "\n";
+        cout <<"size of next level is" << bag->get_size() << "\n";
     } else { // recursively split the pennant
         cout << "split pennant";
-		Pennant* other = p->pennant_split();
+        Pennant* other = p->pennant_split();
         cilk_spawn process_pennant(p, bag, d);
         process_pennant(other, bag, d);
         cilk_sync;

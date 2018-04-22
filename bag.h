@@ -83,21 +83,21 @@ public:
 class Bag {
 public:
     int r;
-	std::vector<Pennant *> S;
+    std::vector<Pennant *> S;
     
-	Bag() : r(S_DEFAULT) {
-		S.reserve(r);
-    	for(int i = 0; i < r; i++){
-			S.push_back(new Pennant());
-		}
-	}
+    Bag() : r(S_DEFAULT) {
+        S.reserve(r);
+        for(int i = 0; i < r; i++){
+            S.push_back(new Pennant());
+        }
+    }
 
     Bag(int s) : r(s) {
-		S.reserve(r);
-		for(int i = 0; i < r; i++){
-			S.push_back(new Pennant());
-    	}
-	}
+        S.reserve(r);
+        for(int i = 0; i < r; i++){
+            S.push_back(new Pennant());
+        }
+    }
 
     void insert(int v) {
         int i = 0;
@@ -106,7 +106,7 @@ public:
             S[i]->pennant_union(x);
             x = S[i];
             S[i] = new Pennant();
-			i++;
+            i++;
         }
         S[i] = x;
     }
@@ -180,10 +180,10 @@ public:
     }
 
     ~Bag(){
-		int size = S.size();
-		for(int i = 0; i < size; i++){
-			delete(S[i]);
-		}
+        int size = S.size();
+        for(int i = 0; i < size; i++){
+            delete(S[i]);
+        }
         //delete S;
     }
 };
