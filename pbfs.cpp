@@ -16,22 +16,24 @@ int v0, v, e;
 int * dist;
 
 void naive_bfs();
-vector<vector<int> > list(1000, vector<int>(10));
+vector<vector<int> > list;
 void init();
 void bfs();
-vector<int> get_neighbour(int v, vector<vector<int> > list);
 void process_layer(BagView* bag, BagView* next, int d);
 void process_pennant(Pennant* p, BagView* bag, int d);
 
-void init() {
+void init(char* fname) {
     ifstream fin;
     string c; 
-    fin.open("btree.in"); 
+    fin.open(fname);
+    list = vector<vector<int> >(); 
     fin >> v >> e >> c;
     dist = new int [v+1];
     v0 = 1;
     dist[v0] = 0;
+    list[1] = vector<int>(10);
     for (int i = 2; i <= v; ++i) {
+        list[i] = vector<int>(10);
         dist[i] = 0x7fffffff;
     }
     int v1, v2;
@@ -81,11 +83,24 @@ void bfs() {
     }
 }
 
-int main(){
-    init();
+int main(int argc,char* argv[]){
+    if (argc == 1) {
+        cout << "Usage: pbfs <file path> <flags>" << endl;
+        return 0;
+    }
+    init(argv[1]);
+    bool naive = false;
+    if (argc > 2) {
+        string flags(argv[2]);
+        if (flags.find("n") != string::npos)
+            naive = true;
+    }
 
-    clockmark_t begin_rm = ktiming_getmark(); 
-    bfs();
+    clockmark_t begin_rm = ktiming_getmark();
+    if (naive)
+        naive_bfs();
+    else
+        bfs();
     clockmark_t end_rm = ktiming_getmark();
 
     printf("Elapsed time in seconds: %f\n", ktiming_diff_sec(&begin_rm, &end_rm));
@@ -106,9 +121,7 @@ void process_layer(BagView* bag, BagView* next, int d){
 }
 
 void process_pennant(Pennant* p, BagView* bag, int d){
-    cout << "d: " << d << "\n"; 
     if (p->k < 7){ // the penant is small enough to process in one run
-        cout << "process penant with k = " << p->k << "\n";
         std::queue<Node*> q;
         q.push(p->root);
         while (q.size()){
@@ -120,17 +133,13 @@ void process_pennant(Pennant* p, BagView* bag, int d){
                 int v = adj.at(i);
                 if (dist[v] == 0x7fffffff) {
                     dist[v] = d+1;
-                    cout << "Inserting " << v << "\n";
                     bag->insert(v);
-                    cout << bag->get_size();
                 }
             }
             if (front->left) q.push(front->left);
             if (front->right) q.push(front->right);
         }
-        cout <<"size of next level is" << bag->get_size() << "\n";
     } else { // recursively split the pennant
-        cout << "split pennant";
         Pennant* other = p->pennant_split();
         cilk_spawn process_pennant(p, bag, d);
         process_pennant(other, bag, d);
