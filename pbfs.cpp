@@ -9,7 +9,7 @@
 #include <string>
 
 #include "ktiming.h"
-#include"reducer_bag.h"
+#include "reducer_bag.h"
 using namespace std;
 
 int v0, v, e;
@@ -26,8 +26,8 @@ void init(char* fname) {
     ifstream fin;
     string c; 
     fin.open(fname);
-    list = vector<vector<int> >(); 
     fin >> v >> e >> c;
+    list = vector<vector<int> >(v+1);
     dist = new int [v+1];
     v0 = 1;
     dist[v0] = 0;
@@ -113,6 +113,7 @@ int main(int argc,char* argv[]){
 
 
 void process_layer(BagView* bag, BagView* next, int d){
+    printf("processing layer: %d\n", d);
     cilk_for (int i = 0; i < bag->get_depth(); i++){
         if (!bag->get_value()->S[i]->is_empty()){
             process_pennant(bag->get_value()->S[i],next,d);
@@ -128,12 +129,14 @@ void process_pennant(Pennant* p, BagView* bag, int d){
             Node* front = q.front();
             q.pop();
             int v = front->val;
+            printf("exploring vertex: %d\n", v);
             vector<int> adj = list[v];
             cilk_for(int i = 0; i < adj.size(); i++){
-                int v = adj.at(i);
-                if (dist[v] == 0x7fffffff) {
-                    dist[v] = d+1;
-                    bag->insert(v);
+                int v2 = adj.at(i);
+                if (dist[v2] == 0x7fffffff) {
+                    dist[v2] = d+1;
+                    printf("inserting vertex: %d\n", v2);
+                    bag->insert(v2);
                 }
             }
             if (front->left) q.push(front->left);
