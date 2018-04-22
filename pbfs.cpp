@@ -28,7 +28,7 @@ void init() {
     fin.open("matrix.in"); 
     fin >> v >> e >> c;
     dist = new int [v];
-    v0 = 0;
+    v0 = 1;
     dist[v0] = 0;
     for (int i = 1; i < v; ++i) {
         dist[i] = 0x7fffffff;
@@ -61,12 +61,16 @@ void bfs() {
 int main(){
     init();
 
-    //clockmark_t begin_rm = ktiming_getmark(); 
+    clockmark_t begin_rm = ktiming_getmark(); 
     bfs();
-    //clockmark_t end_rm = ktiming_getmark();
+    clockmark_t end_rm = ktiming_getmark();
 
-    //printf("Elapsed time in seconds: %f\n", ktiming_diff_sec(&begin_rm, &end_rm));
-    return 0;
+    printf("Elapsed time in seconds: %f\n", ktiming_diff_sec(&begin_rm, &end_rm));
+    for(int i = 0; i < v; i++){
+		cout << dist[i] << " "; 
+	}
+	
+	return 0;
 }
 
 
