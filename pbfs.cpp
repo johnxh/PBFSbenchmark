@@ -74,8 +74,8 @@ int main(){
 
 void process_layer(BagView* bag, BagView* next, int d){
     cilk_for (int i = 0; i < bag->get_depth(); i++){
-        if (!bag->get_value()->S[i].is_empty()){
-            process_pennant(&(bag->get_value()->S[i]),next,d);
+        if (!bag->get_value()->S[i]->is_empty()){
+            process_pennant(bag->get_value()->S[i],next,d);
         }
     }
 }

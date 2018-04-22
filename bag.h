@@ -1,9 +1,8 @@
-#include <stdlib.h>
-
 #ifndef Bag_H
 #define Bag_H
-
-# define S_DEFAULT 10
+#include <cstdlib>
+#include <vector>
+#define S_DEFAULT 10
 
 class Node {
 public:
@@ -83,61 +82,63 @@ public:
 class Bag {
 public:
     int r;
-    Pennant* S;   //backbone
-
-    Bag() : r(S_DEFAULT) {
-        S = new Pennant[S_DEFAULT];
-    }
+	std::vector<Pennant *> S;
+    
+	Bag() : r(S_DEFAULT) {
+		S.reserve(r);
+    	for(int i = 0; i < r; i++){
+			S.push_back(new Pennant());
+		}
+	}
 
     Bag(int s) : r(s) {
-        S = new Pennant[r];
-    }
+		S.reserve(r);
+		for(int i = 0; i < r; i++){
+			S.push_back(new Pennant());
+    	}
+	}
 
     void insert(int v) {
         int i = 0;
         Pennant* x = new Pennant(v);
-        while (!S[i].is_empty()) {
-            S[i].pennant_union(x);
-            x = &(S[i]);
-            S[i++].k = -1;
+        while (!S[i]->is_empty()) {
+            S[i]->pennant_union(x);
+            x = S[i];
+            S[i++]->k = -1;
         }
-        S[i] = *x;
+        S[i] = x;
     }
 
     void bag_union(Bag* P) {
         Pennant* y = new Pennant();
         for (int i = 0; i < r; ++i) {
-            if (S[i].is_empty()) {
-                if (P->S[i].is_empty()) {
+            if (S[i]->is_empty()) {
+                if (P->S[i]->is_empty()) {
                     if (!y->is_empty()) {
-                        S[i] = *y;
+                        S[i] = y;
                         y = new Pennant();
                     }
                 } else { // !P.S[i].is_empty()
                     if (y->is_empty()) {
                         S[i] = P->S[i];
-						Pennant* new_pennant = new Pennant();
-                        P->S[i] = *new_pennant;
+                        P->S[i] = new Pennant();
                     }
                 }
             }
             else { // !this.S[i].is_empty()
-                if (P->S[i].is_empty()) {
+                if (P->S[i]->is_empty()) {
                     if (!y->is_empty()) {
-                        y->pennant_union(&S[i]);
-						Pennant* new_pennant = new Pennant();
-                        S[i] = *new_pennant;
+                        y->pennant_union(S[i]);
+                        S[i] = new Pennant();
                     }
                 } else {  // !P.S[i].is_empty()
                     if (y->is_empty()) {
-                        S[i].pennant_union(&(P->S[i]));
-                        y = &(S[i]);
-						Pennant* new_pennant = new Pennant();
-						Pennant* another_new_pennant = new Pennant();
-                        S[i] = *new_pennant;
-                        P->S[i] = *another_new_pennant;
+                        S[i]->pennant_union(P->S[i]);
+                        y = S[i];
+                        S[i] = new Pennant();
+                        P->S[i] = new Pennant();
                     } else {
-                        y->pennant_union(&(P->S[i]));
+                        y->pennant_union(P->S[i]);
                     }
                 } 
             }
@@ -147,7 +148,7 @@ public:
 
     bool is_empty() {
         for (int i = 0; i < r; ++i) {
-            if (!S[i].is_empty()) {
+            if (!S[i]->is_empty()) {
                 return false;
             }
         }
@@ -158,7 +159,7 @@ public:
         int sum = 0;
         int mult = 1;
         for (int i = 0; i < r; ++i) {
-            if (!S[i].is_empty()) {
+            if (!S[i]->is_empty()) {
                 sum += mult;
             }
             mult = mult << 1;
@@ -169,7 +170,7 @@ public:
     int get_depth() {
         int ret = -1;
         for (int i = 0; i < r; ++i) {
-            if (!S[i].is_empty()) {
+            if (!S[i]->is_empty()) {
                 ret = i;
             }
         }
@@ -177,7 +178,11 @@ public:
     }
 
     ~Bag(){
-        delete []S;
+		int size = S.size();
+		for(int i = 0; i < size; i++){
+			delete(S[i]);
+		}
+        //delete S;
     }
 };
 
