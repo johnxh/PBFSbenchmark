@@ -105,7 +105,8 @@ public:
         while (!S[i]->is_empty()) {
             S[i]->pennant_union(x);
             x = S[i];
-            S[i++]->k = -1;
+            S[i] = new Pennant();
+			i++;
         }
         S[i] = x;
     }
