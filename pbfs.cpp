@@ -14,8 +14,8 @@ using namespace std;
 
 int v0, v, e;
 int * dist;
-vector<vector<int> > list(1000, vector<int>(10));
 
+vector<vector<int> > list(1000, vector<int>(10));
 void init();
 void bfs();
 vector<int> get_neighbour(int v, vector<vector<int> > list);
@@ -49,25 +49,23 @@ void bfs() {
     int d = 0; //level number
     
     // initialize list
-
-
     BagView* bag = new BagView();
     bag->insert(v0);
-    
     while (!bag->is_empty()) {
         BagView* next_bag = new BagView();
 		process_layer(bag, next_bag,d++);  
-    }
+    	bag = next_bag;
+	}
 }
 
 int main(){
     init();
 
-    clockmark_t begin_rm = ktiming_getmark(); 
+    //clockmark_t begin_rm = ktiming_getmark(); 
     bfs();
-    clockmark_t end_rm = ktiming_getmark();
+    //clockmark_t end_rm = ktiming_getmark();
 
-    printf("Elapsed time in seconds: %f\n", ktiming_diff_sec(&begin_rm, &end_rm));
+    //printf("Elapsed time in seconds: %f\n", ktiming_diff_sec(&begin_rm, &end_rm));
     return 0;
 }
 
@@ -81,8 +79,11 @@ void process_layer(BagView* bag, BagView* next, int d){
 }
 
 void process_pennant(Pennant* p, BagView* bag, int d){
-    if (p->k < 7){ // the penant is small enough to process in one run
-        std::queue<Node*> q;
+    cout << "d: " << d << "\n"; 
+	
+	if (p->k < 7){ // the penant is small enough to process in one run
+        cout << "process penant";
+		std::queue<Node*> q;
         q.push(p->root);
         while (q.size()){
             Node* front = q.back();
@@ -100,9 +101,10 @@ void process_pennant(Pennant* p, BagView* bag, int d){
             if (front->right) q.push(front->right);
         }
     } else { // recursively split the pennant
-        Pennant* other = p->pennant_split();
+        cout << "split pennant";
+		Pennant* other = p->pennant_split();
         cilk_spawn process_pennant(p, bag, d);
-        process_pennant(other, bag,d);
+        process_pennant(other, bag, d);
         cilk_sync;
     }
 }

@@ -9,7 +9,10 @@ class BagView {
 public:
     Bag* bag;
     typedef Bag* value_type;
-    BagView() : bag() {}
+    BagView() {
+		bag = new Bag();	
+	}
+
     void reduce(BagView* bv) {
         bag->bag_union(bv->get_value());
     }
@@ -33,6 +36,10 @@ public:
     Bag* get_value() {
         return bag;
     }
+
+	~BagView() {
+		delete bag;
+	}
 };
 
 // Monoid class.

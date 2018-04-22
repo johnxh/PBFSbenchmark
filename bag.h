@@ -2,6 +2,7 @@
 #define Bag_H
 #include <cstdlib>
 #include <vector>
+#include <iostream>
 #define S_DEFAULT 10
 
 class Node {
