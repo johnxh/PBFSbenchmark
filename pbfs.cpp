@@ -119,7 +119,6 @@ int main(int argc,char* argv[]){
 
 
 void process_layer(BagView* bag, BagView* next, int d){
-    printf("processing layer: %d\n", d);
     cilk_for (int i = 0; i < bag->get_depth(); i++){
         if (!bag->get_value()->S[i]->is_empty()){
             process_pennant(bag->get_value()->S[i],next,d);
@@ -135,13 +134,11 @@ void process_pennant(Pennant* p, BagView* bag, int d){
             Node* front = q.front();
             q.pop();
             int v = front->val;
-            printf("exploring vertex: %d\n", v);
             vector<int> adj = list[v];
             cilk_for(int i = 0; i < adj.size(); i++){
                 int v2 = adj.at(i);
                 if (dist[v2] == 0x7fffffff) {
                     dist[v2] = d+1;
-                    printf("inserting vertex: %d\n", v2);
                     bag->insert(v2);
                 }
             }
