@@ -17,12 +17,12 @@ int * dist;
 
 void naive_bfs();
 vector<vector<int> > list;
-void init();
+void init(char* fname, bool nw);
 void bfs();
 void process_layer(BagView* bag, BagView* next, int d);
 void process_pennant(Pennant* p, BagView* bag, int d);
 
-void init(char* fname) {
+void init(char* fname, bool nw) {
     ifstream fin;
     string c; 
     fin.open(fname);
@@ -38,7 +38,8 @@ void init(char* fname) {
     }
     int v1, v2;
     for (int i = 0; i < e; ++i) {
-        fin >> v1 >> v2 >> c;
+        fin >> v1 >> v2;
+        if (!nw) fin >> c;
         if (v1 != v2) {
             list[v1].push_back(v2);
             list[v2].push_back(v1);
@@ -88,13 +89,17 @@ int main(int argc,char* argv[]){
         cout << "Usage: pbfs <file path> <flags>" << endl;
         return 0;
     }
-    init(argv[1]);
-    bool naive = false;
+    bool no_weight = false, naive = false, print = false;
     if (argc > 2) {
         string flags(argv[2]);
         if (flags.find("n") != string::npos)
             naive = true;
+        if (flags.find("p") != string::npos)
+            print = true;
+        if (flags.find("w") != string::npos)
+            no_weight = true;
     }
+    init(argv[1], no_weight);
 
     clockmark_t begin_rm = ktiming_getmark();
     if (naive)
@@ -102,12 +107,13 @@ int main(int argc,char* argv[]){
     else
         bfs();
     clockmark_t end_rm = ktiming_getmark();
+    if (print) {
+        for(int i = 1; i <= v; i++){
+            cout << dist[i] << " ";
+        }
+    }
 
     printf("Elapsed time in seconds: %f\n", ktiming_diff_sec(&begin_rm, &end_rm));
-    for(int i = 1; i <= v; i++){
-        cout << dist[i] << " "; 
-    }
-    
     return 0;
 }
 
