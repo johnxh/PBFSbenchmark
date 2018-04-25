@@ -19,7 +19,7 @@ all:: $(PROGS)
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 pbfs: ktiming.o pbfs.o
-	$(CXX) -o $@ $^ $(INST_LIBS)
+	$(CXX) -o $@ $^ $(LIBS)
 
 
 

@@ -107,6 +107,7 @@ public:
     void insert(int v) {
         int i = 0;
         Pennant* x = new Pennant(v);
+        pthread_mutex_lock(&lock);
         while (!S[i]->is_empty()) {
             S[i]->pennant_union(x);
             x = S[i];
@@ -114,6 +115,7 @@ public:
             i++;
         }
         S[i] = x;
+        pthread_mutex_unlock(&lock);
     }
 
     void bag_union(Bag* P) {

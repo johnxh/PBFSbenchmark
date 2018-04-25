@@ -17,7 +17,7 @@ int * dist;
 
 void naive_bfs();
 vector<vector<int> > list;
-void init();
+void init(char* fname, bool nw);
 void bfs();
 void process_layer(Bag* bag, Bag* next, int d);
 void process_pennant(Pennant* p, Bag* bag, int d);
@@ -39,7 +39,11 @@ void init(char* fname, bool nw) {
     int v1, v2;
     for (int i = 0; i < e; ++i) {
         fin >> v1 >> v2;
+<<<<<<< HEAD
         if (!nw) fin>> c;
+=======
+        if (!nw) fin >> c;
+>>>>>>> 3c3177bac9d1b3dbdea82121d7c5b7e17989c31f
         if (v1 != v2) {
             list[v1].push_back(v2);
             list[v2].push_back(v1);
@@ -109,17 +113,29 @@ int main(int argc,char* argv[]){
     clockmark_t end_rm = ktiming_getmark();
     if (print) {
         for(int i = 1; i <= v; i++){
+<<<<<<< HEAD
             cout << dist[i] << " "; 
         }
     }
 
     printf("Elapsed time in seconds: %f\n", ktiming_diff_sec(&begin_rm, &end_rm)); 
+=======
+            cout << dist[i] << " ";
+        }
+    }
+
+    printf("Elapsed time in seconds: %f\n", ktiming_diff_sec(&begin_rm, &end_rm));
+>>>>>>> 3c3177bac9d1b3dbdea82121d7c5b7e17989c31f
     return 0;
 }
 
 
+<<<<<<< HEAD
 void process_layer(Bag* bag, Bag* next, int d){
     //printf("processing layer: %d\n", d);
+=======
+void process_layer(BagView* bag, BagView* next, int d){
+>>>>>>> 3c3177bac9d1b3dbdea82121d7c5b7e17989c31f
     cilk_for (int i = 0; i < bag->get_depth(); i++){
         if (!bag->S[i]->is_empty()){
             process_pennant(bag->S[i],next,d);
@@ -141,8 +157,12 @@ void process_pennant(Pennant* p, Bag* bag, int d){
                 int v2 = adj.at(i);
                 if (dist[v2] == 0x7fffffff) {
                     dist[v2] = d+1;
+<<<<<<< HEAD
                     //printf("inserting vertex: %d\n", v2);
                     b->insert(v2);
+=======
+                    bag->insert(v2);
+>>>>>>> 3c3177bac9d1b3dbdea82121d7c5b7e17989c31f
                 }
             }
             if (front->left) q.push(front->left);
