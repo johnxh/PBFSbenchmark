@@ -3,7 +3,8 @@
 #include <cstdlib>
 #include <vector>
 #include <iostream>
-#define S_DEFAULT 10
+#include <pthread.h>
+#define S_DEFAULT 20
 
 class Node {
 public:
@@ -85,12 +86,14 @@ class Bag {
 public:
     int r;
     std::vector<Pennant *> S;
-    
+    pthread_mutex_t lock;
+
     Bag() : r(S_DEFAULT) {
         S.reserve(r);
         for(int i = 0; i < r; i++){
             S.push_back(new Pennant());
         }
+        pthread_mutex_init(&(lock),NULL);
     }
 
     Bag(int s) : r(s) {
@@ -98,6 +101,7 @@ public:
         for(int i = 0; i < r; i++){
             S.push_back(new Pennant());
         }
+        pthread_mutex_init(&(lock),NULL);
     }
 
     void insert(int v) {
@@ -114,6 +118,7 @@ public:
 
     void bag_union(Bag* P) {
         Pennant* y = new Pennant();
+        pthread_mutex_lock(&lock);
         for (int i = 0; i < r; ++i) {
             if (S[i]->is_empty()) {
                 if (P->S[i]->is_empty()) {
@@ -146,7 +151,8 @@ public:
                 } 
             }
         }
-        delete(P);
+        pthread_mutex_unlock(&lock);
+        //delete(P);
     }
 
     bool is_empty() {
