@@ -19,8 +19,8 @@ void naive_bfs();
 vector<vector<int> > list;
 void init(char* fname, bool nw);
 void bfs();
-void process_layer(BagView* bag, BagView* next, int d);
-void process_pennant(Pennant* p, BagView* bag, int d);
+void process_layer(Bag* bag, Bag* next, int d);
+void process_pennant(Pennant* p, Bag* bag, int d);
 
 void init(char* fname, bool nw) {
     ifstream fin;
@@ -75,11 +75,11 @@ void bfs() {
     int d = 0; //level number
     
     // initialize list
-    BagView* bag = new BagView();
+    Bag* bag = new Bag();
     bag->insert(v0);
     while (!bag->is_empty()) {
-        BagView* next_bag = new BagView();
-        process_layer(bag, next_bag,d++);  
+        Bag* next_bag = new Bag();
+        process_layer(bag, next_bag,d++); 
         bag = next_bag;
     }
 }
@@ -109,25 +109,27 @@ int main(int argc,char* argv[]){
     clockmark_t end_rm = ktiming_getmark();
     if (print) {
         for(int i = 1; i <= v; i++){
-            cout << dist[i] << " ";
+            cout << dist[i] << " "; 
         }
     }
 
-    printf("Elapsed time in seconds: %f\n", ktiming_diff_sec(&begin_rm, &end_rm));
+    printf("Elapsed time in seconds: %f\n", ktiming_diff_sec(&begin_rm, &end_rm)); 
     return 0;
 }
 
 
-void process_layer(BagView* bag, BagView* next, int d){
+void process_layer(Bag* bag, Bag* next, int d){
+    //printf("processing layer: %d\n", d);
     cilk_for (int i = 0; i < bag->get_depth(); i++){
-        if (!bag->get_value()->S[i]->is_empty()){
-            process_pennant(bag->get_value()->S[i],next,d);
+        if (!bag->S[i]->is_empty()){
+            process_pennant(bag->S[i],next,d);
         }
     }
 }
 
-void process_pennant(Pennant* p, BagView* bag, int d){
+void process_pennant(Pennant* p, Bag* bag, int d){
     if (p->k < 7){ // the penant is small enough to process in one run
+        Bag* b = new Bag();
         std::queue<Node*> q;
         q.push(p->root);
         while (q.size()){
@@ -135,21 +137,24 @@ void process_pennant(Pennant* p, BagView* bag, int d){
             q.pop();
             int v = front->val;
             vector<int> adj = list[v];
-            cilk_for(int i = 0; i < adj.size(); i++){
+            for(int i = 0; i < adj.size(); i++){
                 int v2 = adj.at(i);
                 if (dist[v2] == 0x7fffffff) {
                     dist[v2] = d+1;
-                    bag->insert(v2);
+                    b->insert(v2);
                 }
             }
             if (front->left) q.push(front->left);
             if (front->right) q.push(front->right);
         }
+       bag->bag_union(b);
     } else { // recursively split the pennant
         Pennant* other = p->pennant_split();
-        cilk_spawn process_pennant(p, bag, d);
+        Bag* bag_new = new Bag();
+        cilk_spawn process_pennant(p, bag_new, d);
         process_pennant(other, bag, d);
         cilk_sync;
+        bag->bag_union(bag_new);
     }
 }
 
